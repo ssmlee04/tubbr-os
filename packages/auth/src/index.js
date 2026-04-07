@@ -7,6 +7,8 @@ const app = new Hono();
 
 app.get('/', (c) => c.text('OK', 200));
 
+app.get('/health', (c) => c.text('OK', 200));
+
 app.post('/login', async (c) => {
   const { username, password } = await c.req.json();
 
