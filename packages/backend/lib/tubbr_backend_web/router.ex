@@ -1,5 +1,5 @@
 defmodule TubbrWeb.Router do
-  use TubbrWeb, :router
+  use Phoenix.Router
 
   pipeline :api do
     plug :accepts, ["json"]
