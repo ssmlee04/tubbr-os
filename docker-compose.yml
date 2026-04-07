@@ -46,13 +46,21 @@ services:
     ports:
       - "3001:3001"
     volumes:
-      - ./packages/web:/app
+      - ./packages/web/src:/app/src
+      - ./packages/web/public:/app/public
+      - ./packages/web/next.config.ts:/app/next.config.ts
+      - ./packages/web/next-env.d.ts:/app/next-env.d.ts
+      - ./packages/web/tsconfig.json:/app/tsconfig.json
+      - ./packages/web/package.json:/app/package.json
+      - ./packages/web/package-lock.json:/app/package-lock.json
       - web_node_modules:/app/node_modules
     environment:
       NEXT_PUBLIC_API_URL: http://auth:3000
     working_dir: /app
     command: sh -c "npm install && npm run dev"
     user: root
+    depends_on:
+      - auth
 
   backend:
     image: elixir:1.15
