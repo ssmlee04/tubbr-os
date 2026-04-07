@@ -312,7 +312,39 @@ export default function CharactersPage() {
                 <p style={{ color: "rgba(255,255,255,0.6)", marginTop: "8px", fontSize: "14px" }}>
                   {character.description || "No description"}
                 </p>
-                <div style={{ display: "flex", gap: "12px", marginTop: "20px" }}>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: "8px", marginTop: "20px" }}>
+                  <button
+                    onClick={() => router.push(`/dashboard/characters/${character.id}/images`)}
+                    style={{
+                      flex: "1 1 auto",
+                      minWidth: "100px",
+                      background: "#6366f1",
+                      color: "#fff",
+                      border: "none",
+                      padding: "8px",
+                      borderRadius: "6px",
+                      cursor: "pointer",
+                      fontSize: "13px",
+                    }}
+                  >
+                    Generate Images
+                  </button>
+                  <button
+                    onClick={() => router.push(`/dashboard/characters/${character.id}/videos`)}
+                    style={{
+                      flex: "1 1 auto",
+                      minWidth: "100px",
+                      background: "#8b5cf6",
+                      color: "#fff",
+                      border: "none",
+                      padding: "8px",
+                      borderRadius: "6px",
+                      cursor: "pointer",
+                      fontSize: "13px",
+                    }}
+                  >
+                    Generate Videos
+                  </button>
                   <button
                     onClick={() => router.push(`/dashboard/characters/${character.id}`)}
                     style={{
