@@ -1,4 +1,4 @@
-defmodule Tubbr.Character do
+defmodule Tubbr.Backend.Character do
   use Ecto.Schema
   import Ecto.Changeset
 

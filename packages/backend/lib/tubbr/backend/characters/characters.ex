@@ -1,6 +1,6 @@
-defmodule Tubbr.Backend do
+defmodule Tubbr.Backend.Characters do
   alias Tubbr.Repo
-  alias Tubbr.Character
+  alias Tubbr.Backend.Character
 
   def list_characters do
     Repo.all(Character)

@@ -1,5 +1,5 @@
 defmodule TubbrWeb.CharacterJSON do
-  alias Tubbr.Character
+  alias Tubbr.Backend.Character
 
   def index(%{characters: characters}) do
     %{data: for(character <- characters, do: data(character))}
