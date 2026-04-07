@@ -19,6 +19,7 @@ RUN mix local.hex --force && \
 # Copy dependencies
 COPY priv priv
 COPY config config
+ENV MIX_ENV=prod
 RUN mix deps.get
 RUN mix deps.compile
 
