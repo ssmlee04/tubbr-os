@@ -6,7 +6,7 @@ import { DashboardSidebar } from "../DashboardSidebar";
 import { useAuth } from "@/hooks/useAuth";
 
 interface Character {
-  id: number;
+  id: string;
   name: string;
   description: string;
 }
@@ -73,7 +73,7 @@ export default function CharactersPage() {
     }
   };
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this character?")) return;
 
     try {
