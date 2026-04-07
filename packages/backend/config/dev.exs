@@ -1,13 +1,21 @@
 import Config
 
+# Load .env file for local development
 if File.exists?(".env") do
-  Dotenv.load()
+  ".env"
+  |> File.read!()
+  |> String.split("\n")
+  |> Enum.reject(&(&1 == "" or String.starts_with?(&1, "#")))
+  |> Enum.each(fn line ->
+    [key, value] = String.split(line, "=", parts: 2)
+    System.put_env(String.trim(key), String.trim(value))
+  end)
 end
 
 config :tubbr, Tubbr.Repo,
   username: "tubbr",  # pragma: allowlist secret
   password: "tubbr",  # pragma: allowlist secret
-  hostname: "localhost",
+  hostname: System.get_env("DATABASE_HOST", "localhost"),
   database: "tubbr",
   stacktrace: true,
   show_sensitive_data_on_connection_error: true,
