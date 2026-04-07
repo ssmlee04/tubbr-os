@@ -1,0 +1,13 @@
+.git
+.gitignore
+Dockerfile
+node_modules
+deps
+_build
+priv/static
+*.log
+.elixir_ls
+.vscode
+.idea
+*.md
+test
