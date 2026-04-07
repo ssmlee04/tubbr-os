@@ -5,10 +5,6 @@ import { useRouter, useParams } from "next/navigation";
 import { DashboardSidebar } from "../../DashboardSidebar";
 import { useAuth } from "@/hooks/useAuth";
 
-const DEFAULT_IMAGE_PROMPT = "Professional headshot, studio lighting, white background";
-const DEFAULT_VIDEO_PROMPT = "Speaking directly to camera, confident pose, natural lighting";
-const DEFAULT_VOICE_PROMPT = "Warm, friendly tone, clear enunciation, professional delivery";
-
 export default function CharacterEditPage() {
   useAuth();
 
@@ -18,9 +14,9 @@ export default function CharacterEditPage() {
 
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [defaultImagePrompt, setDefaultImagePrompt] = useState(DEFAULT_IMAGE_PROMPT);
-  const [defaultVideoPrompt, setDefaultVideoPrompt] = useState(DEFAULT_VIDEO_PROMPT);
-  const [defaultVoicePrompt, setDefaultVoicePrompt] = useState(DEFAULT_VOICE_PROMPT);
+  const [defaultImagePrompt, setDefaultImagePrompt] = useState("");
+  const [defaultVideoPrompt, setDefaultVideoPrompt] = useState("");
+  const [defaultVoicePrompt, setDefaultVoicePrompt] = useState("");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
@@ -35,9 +31,9 @@ export default function CharacterEditPage() {
         const data = await res.json();
         setName(data.data.name || "");
         setDescription(data.data.description || "");
-        setDefaultImagePrompt(data.data.default_image_prompt || DEFAULT_IMAGE_PROMPT);
-        setDefaultVideoPrompt(data.data.default_video_prompt || DEFAULT_VIDEO_PROMPT);
-        setDefaultVoicePrompt(data.data.default_voice_prompt || DEFAULT_VOICE_PROMPT);
+        setDefaultImagePrompt(data.data.default_image_prompt || "");
+        setDefaultVideoPrompt(data.data.default_video_prompt || "");
+        setDefaultVoicePrompt(data.data.default_voice_prompt || "");
       } catch (err) {
         setError("Failed to load character");
       } finally {
