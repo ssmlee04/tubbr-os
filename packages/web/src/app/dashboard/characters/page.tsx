@@ -11,6 +11,10 @@ interface Character {
   description: string;
 }
 
+const DEFAULT_IMAGE_PROMPT = "Professional headshot, studio lighting, white background";
+const DEFAULT_VIDEO_PROMPT = "Speaking directly to camera, confident pose, natural lighting";
+const DEFAULT_VOICE_PROMPT = "Warm, friendly tone, clear enunciation, professional delivery";
+
 export default function CharactersPage() {
   useAuth();
 
@@ -18,7 +22,13 @@ export default function CharactersPage() {
   const [characters, setCharacters] = useState<Character[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
-  const [formData, setFormData] = useState({ name: "", description: "" });
+  const [formData, setFormData] = useState({
+    name: "",
+    description: "",
+    default_image_prompt: DEFAULT_IMAGE_PROMPT,
+    default_video_prompt: DEFAULT_VIDEO_PROMPT,
+    default_voice_prompt: DEFAULT_VOICE_PROMPT,
+  });
 
   const API_URL = "http://localhost:4000/api/characters";
 
@@ -48,7 +58,13 @@ export default function CharactersPage() {
       });
 
       if (res.ok) {
-        setFormData({ name: "", description: "" });
+        setFormData({
+          name: "",
+          description: "",
+          default_image_prompt: DEFAULT_IMAGE_PROMPT,
+          default_video_prompt: DEFAULT_VIDEO_PROMPT,
+          default_voice_prompt: DEFAULT_VOICE_PROMPT,
+        });
         setShowForm(false);
         fetchCharacters();
       }
@@ -82,7 +98,13 @@ export default function CharactersPage() {
           <button
             onClick={() => {
               setShowForm(true);
-              setFormData({ name: "", description: "" });
+              setFormData({
+                name: "",
+                description: "",
+                default_image_prompt: DEFAULT_IMAGE_PROMPT,
+                default_video_prompt: DEFAULT_VIDEO_PROMPT,
+                default_voice_prompt: DEFAULT_VOICE_PROMPT,
+              });
             }}
             style={{
               background: "#3b82f6",
@@ -119,11 +141,14 @@ export default function CharactersPage() {
                 background: "#1a1a1a",
                 padding: "32px",
                 borderRadius: "12px",
-                width: "400px",
+                width: "500px",
+                maxHeight: "80vh",
+                overflow: "auto",
                 border: "1px solid #333",
               }}
             >
               <h2 style={{ color: "#fff", fontSize: "20px", marginBottom: "24px" }}>New Character</h2>
+
               <input
                 type="text"
                 placeholder="Character name"
@@ -141,11 +166,72 @@ export default function CharactersPage() {
                   fontSize: "14px",
                 }}
               />
+
               <textarea
                 placeholder="Description"
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                rows={4}
+                rows={3}
+                style={{
+                  width: "100%",
+                  padding: "12px",
+                  background: "#0a0a0a",
+                  border: "1px solid #333",
+                  borderRadius: "8px",
+                  color: "#fff",
+                  marginBottom: "16px",
+                  fontSize: "14px",
+                  resize: "vertical",
+                }}
+              />
+
+              <label style={{ display: "block", color: "#fff", fontSize: "13px", marginBottom: "8px" }}>
+                Default Image Prompt
+              </label>
+              <textarea
+                value={formData.default_image_prompt}
+                onChange={(e) => setFormData({ ...formData, default_image_prompt: e.target.value })}
+                rows={2}
+                style={{
+                  width: "100%",
+                  padding: "12px",
+                  background: "#0a0a0a",
+                  border: "1px solid #333",
+                  borderRadius: "8px",
+                  color: "#fff",
+                  marginBottom: "16px",
+                  fontSize: "14px",
+                  resize: "vertical",
+                }}
+              />
+
+              <label style={{ display: "block", color: "#fff", fontSize: "13px", marginBottom: "8px" }}>
+                Default Video Prompt
+              </label>
+              <textarea
+                value={formData.default_video_prompt}
+                onChange={(e) => setFormData({ ...formData, default_video_prompt: e.target.value })}
+                rows={2}
+                style={{
+                  width: "100%",
+                  padding: "12px",
+                  background: "#0a0a0a",
+                  border: "1px solid #333",
+                  borderRadius: "8px",
+                  color: "#fff",
+                  marginBottom: "16px",
+                  fontSize: "14px",
+                  resize: "vertical",
+                }}
+              />
+
+              <label style={{ display: "block", color: "#fff", fontSize: "13px", marginBottom: "8px" }}>
+                Default Voice Prompt
+              </label>
+              <textarea
+                value={formData.default_voice_prompt}
+                onChange={(e) => setFormData({ ...formData, default_voice_prompt: e.target.value })}
+                rows={2}
                 style={{
                   width: "100%",
                   padding: "12px",
@@ -158,6 +244,7 @@ export default function CharactersPage() {
                   resize: "vertical",
                 }}
               />
+
               <div style={{ display: "flex", gap: "12px" }}>
                 <button
                   type="submit"

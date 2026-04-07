@@ -54,6 +54,9 @@ defmodule TubbrWeb.CharacterController do
       id: character.id,
       name: character.name,
       description: character.description,
+      default_image_prompt: character.default_image_prompt,
+      default_video_prompt: character.default_video_prompt,
+      default_voice_prompt: character.default_voice_prompt,
       inserted_at: character.inserted_at,
       updated_at: character.updated_at
     }

@@ -5,6 +5,10 @@ import { useRouter, useParams } from "next/navigation";
 import { DashboardSidebar } from "../../DashboardSidebar";
 import { useAuth } from "@/hooks/useAuth";
 
+const DEFAULT_IMAGE_PROMPT = "Professional headshot, studio lighting, white background";
+const DEFAULT_VIDEO_PROMPT = "Speaking directly to camera, confident pose, natural lighting";
+const DEFAULT_VOICE_PROMPT = "Warm, friendly tone, clear enunciation, professional delivery";
+
 export default function CharacterEditPage() {
   useAuth();
 
@@ -14,6 +18,9 @@ export default function CharacterEditPage() {
 
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
+  const [defaultImagePrompt, setDefaultImagePrompt] = useState(DEFAULT_IMAGE_PROMPT);
+  const [defaultVideoPrompt, setDefaultVideoPrompt] = useState(DEFAULT_VIDEO_PROMPT);
+  const [defaultVoicePrompt, setDefaultVoicePrompt] = useState(DEFAULT_VOICE_PROMPT);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
@@ -26,8 +33,11 @@ export default function CharacterEditPage() {
         const res = await fetch(API_URL);
         if (!res.ok) throw new Error("Character not found");
         const data = await res.json();
-        setName(data.data.name);
+        setName(data.data.name || "");
         setDescription(data.data.description || "");
+        setDefaultImagePrompt(data.data.default_image_prompt || DEFAULT_IMAGE_PROMPT);
+        setDefaultVideoPrompt(data.data.default_video_prompt || DEFAULT_VIDEO_PROMPT);
+        setDefaultVoicePrompt(data.data.default_voice_prompt || DEFAULT_VOICE_PROMPT);
       } catch (err) {
         setError("Failed to load character");
       } finally {
@@ -46,7 +56,15 @@ export default function CharacterEditPage() {
       const res = await fetch(API_URL, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ character: { name, description } }),
+        body: JSON.stringify({
+          character: {
+            name,
+            description,
+            default_image_prompt: defaultImagePrompt,
+            default_video_prompt: defaultVideoPrompt,
+            default_voice_prompt: defaultVoicePrompt,
+          },
+        }),
       });
 
       if (!res.ok) throw new Error("Failed to update");
@@ -120,7 +138,67 @@ export default function CharacterEditPage() {
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            rows={6}
+            rows={4}
+            style={{
+              width: "100%",
+              padding: "12px",
+              background: "#1a1a1a",
+              border: "1px solid #333",
+              borderRadius: "8px",
+              color: "#fff",
+              marginBottom: "24px",
+              fontSize: "14px",
+              resize: "vertical",
+            }}
+          />
+
+          <label style={{ display: "block", color: "#fff", marginBottom: "8px" }}>
+            Default Image Prompt
+          </label>
+          <textarea
+            value={defaultImagePrompt}
+            onChange={(e) => setDefaultImagePrompt(e.target.value)}
+            rows={3}
+            style={{
+              width: "100%",
+              padding: "12px",
+              background: "#1a1a1a",
+              border: "1px solid #333",
+              borderRadius: "8px",
+              color: "#fff",
+              marginBottom: "24px",
+              fontSize: "14px",
+              resize: "vertical",
+            }}
+          />
+
+          <label style={{ display: "block", color: "#fff", marginBottom: "8px" }}>
+            Default Video Prompt
+          </label>
+          <textarea
+            value={defaultVideoPrompt}
+            onChange={(e) => setDefaultVideoPrompt(e.target.value)}
+            rows={3}
+            style={{
+              width: "100%",
+              padding: "12px",
+              background: "#1a1a1a",
+              border: "1px solid #333",
+              borderRadius: "8px",
+              color: "#fff",
+              marginBottom: "24px",
+              fontSize: "14px",
+              resize: "vertical",
+            }}
+          />
+
+          <label style={{ display: "block", color: "#fff", marginBottom: "8px" }}>
+            Default Voice Prompt
+          </label>
+          <textarea
+            value={defaultVoicePrompt}
+            onChange={(e) => setDefaultVoicePrompt(e.target.value)}
+            rows={3}
             style={{
               width: "100%",
               padding: "12px",
