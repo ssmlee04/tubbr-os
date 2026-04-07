@@ -1,3 +1,4 @@
 .claude
 *Claude.md
 node_modules
+backend/deps
