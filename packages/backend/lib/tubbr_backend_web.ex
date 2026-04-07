@@ -15,6 +15,13 @@ defmodule TubbrWeb do
     end
   end
 
+  def channel do
+    quote do
+      use Phoenix.Channel
+      import Plug.Conn
+    end
+  end
+
   def static_paths do
     ~w(css fonts images js favicon.ico robots.txt)
   end

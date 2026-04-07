@@ -20,4 +20,8 @@ defmodule TubbrWeb.Endpoint do
   plug Plug.MethodOverride
   plug Plug.Head
   plug TubbrWeb.Router
+
+  socket "/api/socket", TubbrWeb.UserSocket,
+    websocket: true,
+    longpoll: false
 end
