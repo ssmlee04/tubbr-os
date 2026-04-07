@@ -1,23 +1,23 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { DashboardSidebar } from "../DashboardSidebar";
+import { useRouter } from "next/navigation";
+import { DashboardSidebar } from "../../DashboardSidebar";
 import { useAuth } from "@/hooks/useAuth";
 
 interface Character {
   id: number;
   name: string;
   description: string;
-  created_at: string;
 }
 
 export default function CharactersPage() {
   useAuth();
 
+  const router = useRouter();
   const [characters, setCharacters] = useState<Character[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
-  const [editingId, setEditingId] = useState<number | null>(null);
   const [formData, setFormData] = useState({ name: "", description: "" });
 
   const API_URL = "http://localhost:4000/api/characters";
@@ -57,27 +57,6 @@ export default function CharactersPage() {
     }
   };
 
-  const handleUpdate = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!editingId) return;
-
-    try {
-      const res = await fetch(`${API_URL}/${editingId}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ character: formData }),
-      });
-
-      if (res.ok) {
-        setFormData({ name: "", description: "" });
-        setEditingId(null);
-        fetchCharacters();
-      }
-    } catch (error) {
-      console.error("Failed to update character:", error);
-    }
-  };
-
   const handleDelete = async (id: number) => {
     if (!confirm("Are you sure you want to delete this character?")) return;
 
@@ -87,12 +66,6 @@ export default function CharactersPage() {
     } catch (error) {
       console.error("Failed to delete character:", error);
     }
-  };
-
-  const startEdit = (character: Character) => {
-    setFormData({ name: character.name, description: character.description });
-    setEditingId(character.id);
-    setShowForm(true);
   };
 
   return (
@@ -109,7 +82,6 @@ export default function CharactersPage() {
           <button
             onClick={() => {
               setShowForm(true);
-              setEditingId(null);
               setFormData({ name: "", description: "" });
             }}
             style={{
@@ -138,14 +110,11 @@ export default function CharactersPage() {
               justifyContent: "center",
               zIndex: 50,
             }}
-            onClick={() => {
-              setShowForm(false);
-              setEditingId(null);
-            }}
+            onClick={() => setShowForm(false)}
           >
             <form
               onClick={(e) => e.stopPropagation()}
-              onSubmit={editingId ? handleUpdate : handleSubmit}
+              onSubmit={handleSubmit}
               style={{
                 background: "#1a1a1a",
                 padding: "32px",
@@ -154,9 +123,7 @@ export default function CharactersPage() {
                 border: "1px solid #333",
               }}
             >
-              <h2 style={{ color: "#fff", fontSize: "20px", marginBottom: "24px" }}>
-                {editingId ? "Edit Character" : "New Character"}
-              </h2>
+              <h2 style={{ color: "#fff", fontSize: "20px", marginBottom: "24px" }}>New Character</h2>
               <input
                 type="text"
                 placeholder="Character name"
@@ -206,14 +173,11 @@ export default function CharactersPage() {
                     fontWeight: 500,
                   }}
                 >
-                  {editingId ? "Update" : "Create"}
+                  Create
                 </button>
                 <button
                   type="button"
-                  onClick={() => {
-                    setShowForm(false);
-                    setEditingId(null);
-                  }}
+                  onClick={() => setShowForm(false)}
                   style={{
                     flex: 1,
                     background: "#333",
@@ -263,7 +227,7 @@ export default function CharactersPage() {
                 </p>
                 <div style={{ display: "flex", gap: "12px", marginTop: "20px" }}>
                   <button
-                    onClick={() => startEdit(character)}
+                    onClick={() => router.push(`/dashboard/characters/${character.id}`)}
                     style={{
                       flex: 1,
                       background: "#333",
