@@ -8,6 +8,10 @@ config :tubbr, TubbrWeb.Endpoint,
   server: true
 
 config :tubbr, Tubbr.Repo,
+  database: "tubbr",
+  username: "tubbr",  # pragma: allowlist secret
+  password: "tubbr",  # pragma: allowlist secret
+  hostname: "postgres",
   pool_size: 10
 
 config :tubbr, Tubbr.PubSub,
