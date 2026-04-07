@@ -4,7 +4,7 @@ An open source tool for generating scripts and videos using your keywords.
 
 Try the full experience at [https://trytubbr.com](https://trytubbr.com) — create AI-powered videos like this:
 
-[![Video thumbnail](https://assets.trytubbr.com/strawberry-sm.png)](https://www.youtube.com/shorts/4hYoY67NMS0)
+[![Video thumbnail](https://assets.trytubbr.com/strawberry-xs.jpg)](https://www.youtube.com/shorts/4hYoY67NMS0)
 
 ## Quick Start
 
