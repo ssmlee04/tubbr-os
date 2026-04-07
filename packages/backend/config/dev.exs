@@ -1,5 +1,9 @@
 import Config
 
+if File.exists?(".env") do
+  Dotenv.load()
+end
+
 config :tubbr, Tubbr.Repo,
   username: "tubbr",  # pragma: allowlist secret
   password: "tubbr",  # pragma: allowlist secret

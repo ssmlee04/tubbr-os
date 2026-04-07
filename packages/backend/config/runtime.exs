@@ -11,7 +11,7 @@ config :tubbr, Tubbr.Repo,
   database: "tubbr",
   username: "tubbr",  # pragma: allowlist secret
   password: "tubbr",  # pragma: allowlist secret
-  hostname: "postgres",
+  hostname: System.get_env("DATABASE_HOST", "postgres"),
   pool_size: 10
 
 config :tubbr, Tubbr.PubSub,

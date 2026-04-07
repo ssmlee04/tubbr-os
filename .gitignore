@@ -3,3 +3,4 @@
 node_modules
 packages/backend/deps
 packages/backend/_build
+packages/backend/.env
