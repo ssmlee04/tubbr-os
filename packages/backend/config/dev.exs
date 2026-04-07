@@ -1,7 +1,7 @@
 import Config
 
-# Load .env file for local development
-if File.exists?(".env") do
+# Load .env file for local development (skip if DATABASE_HOST is already set by Docker)
+if File.exists?(".env") and System.get_env("DATABASE_HOST") == nil do
   ".env"
   |> File.read!()
   |> String.split("\n")
