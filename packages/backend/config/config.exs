@@ -6,7 +6,8 @@ config :tubbr,
 
 config :tubbr, TubbrWeb.Endpoint,
   url: [host: "localhost"],
-  adapter: Bandit.PhoenixAdapter
+  adapter: Bandit.PhoenixAdapter,
+  pubsub_server: Tubbr.PubSub
 
 config :tubbr,Tubbr.PubSub,
   name: Tubbr.PubSub,
