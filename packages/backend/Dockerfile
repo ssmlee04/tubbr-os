@@ -19,7 +19,7 @@ RUN mix local.hex --force && \
 # Copy dependencies
 COPY priv priv
 COPY config config
-RUN mix deps.get --only prod || true
+RUN mix deps.get
 RUN mix deps.compile
 
 # Copy app code
