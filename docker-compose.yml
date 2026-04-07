@@ -42,23 +42,17 @@ services:
     command: sh -c "node src/migrate.js && node src/index.js"
 
   web:
-    build:
-      context: ./packages/web
-      dockerfile: Dockerfile
+    image: node:22-alpine
     ports:
       - "3001:3001"
+    volumes:
+      - ./packages/web:/app
+      - web_node_modules:/app/node_modules
     environment:
       NEXT_PUBLIC_API_URL: http://auth:3000
-    depends_on:
-      auth:
-        condition: service_healthy
-    healthcheck:
-      test: ["CMD", "wget", "-q", "--spider", "http://localhost:3001"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
-      start_period: 30s
-    command: sh -c "PORT=3001 npm run dev"
+    working_dir: /app
+    command: sh -c "npm install && npm run dev"
+    user: root
 
   backend:
     image: elixir:1.15
@@ -83,3 +77,4 @@ volumes:
   postgres_data:
   backend_deps:
   backend_build:
+  web_node_modules:
