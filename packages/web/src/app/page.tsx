@@ -1,14 +1,39 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Login:", { username, password });
+    setError("");
+    setLoading(true);
+
+    try {
+      const res = await fetch("http://localhost:3000/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        setError(data.error || "Invalid credentials");
+        return;
+      }
+
+      router.push("/dashboard/characters");
+    } catch (err) {
+      setError("Unable to connect to server");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -67,6 +92,7 @@ export default function Home() {
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             placeholder="Username"
+            disabled={loading}
             style={{
               width: "100%",
               padding: "14px 16px",
@@ -78,6 +104,7 @@ export default function Home() {
               outline: "none",
               transition: "all 0.2s ease",
               boxSizing: "border-box",
+              opacity: loading ? 0.5 : 1,
             }}
           />
           <input
@@ -85,6 +112,7 @@ export default function Home() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Password"
+            disabled={loading}
             style={{
               width: "100%",
               padding: "14px 16px",
@@ -96,10 +124,24 @@ export default function Home() {
               outline: "none",
               transition: "all 0.2s ease",
               boxSizing: "border-box",
+              opacity: loading ? 0.5 : 1,
             }}
           />
+
+          {error && (
+            <p style={{
+              color: "#ff6b6b",
+              fontSize: "13px",
+              textAlign: "center",
+              margin: 0,
+            }}>
+              {error}
+            </p>
+          )}
+
           <button
             type="submit"
+            disabled={loading}
             style={{
               width: "100%",
               padding: "14px",
@@ -109,12 +151,13 @@ export default function Home() {
               borderRadius: "12px",
               fontSize: "15px",
               fontWeight: 600,
-              cursor: "pointer",
+              cursor: loading ? "not-allowed" : "pointer",
               transition: "all 0.2s ease",
               marginTop: "8px",
+              opacity: loading ? 0.7 : 1,
             }}
           >
-            Sign In
+            {loading ? "Signing in..." : "Sign In"}
           </button>
         </form>
 
