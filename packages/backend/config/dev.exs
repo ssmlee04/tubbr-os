@@ -15,7 +15,7 @@ end
 config :tubbr, Tubbr.Repo,
   username: "tubbr",  # pragma: allowlist secret
   password: "tubbr",  # pragma: allowlist secret
-  hostname: System.get_env("DATABASE_HOST", "localhost"),
+  hostname: System.get_env("DATABASE_HOST", "postgres"),
   database: "tubbr",
   stacktrace: true,
   show_sensitive_data_on_connection_error: true,
