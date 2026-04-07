@@ -14,6 +14,8 @@ defmodule TubbrWeb.Router do
   scope "/api", TubbrWeb do
     pipe_through :api
 
+    get "/generation-params", GenerationParamsController, :index
+
     get "/characters", CharacterController, :index
     get "/characters/:id", CharacterController, :show
     post "/characters", CharacterController, :create
