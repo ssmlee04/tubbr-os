@@ -17,5 +17,23 @@ services:
       timeout: 5s
       retries: 5
 
+  auth:
+    build:
+      context: ./packages/auth
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      PORT: 3000
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: tubbr
+      POSTGRES_PASSWORD: tubbr
+      POSTGRES_DB: tubbr
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: sh -c "node src/migrate.js && node src/index.js"
+
 volumes:
   postgres_data:
