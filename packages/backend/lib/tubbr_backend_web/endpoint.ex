@@ -7,7 +7,7 @@ defmodule TubbrWeb.Endpoint do
     gzip: false,
     only: TubbrWeb.static_paths()
 
-  plug CORSPlug, origin: :all
+  plug CORSPlug, origin: "*"
 
   plug Plug.RequestId
   plug Plug.Telemetry, event_prefix: [:phoenix, :endpoint]
