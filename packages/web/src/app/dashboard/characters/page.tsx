@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { DashboardSidebar } from "../../DashboardSidebar";
+import { DashboardSidebar } from "../DashboardSidebar";
 import { useAuth } from "@/hooks/useAuth";
 
 interface Character {

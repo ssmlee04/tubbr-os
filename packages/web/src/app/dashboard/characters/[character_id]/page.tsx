@@ -10,7 +10,7 @@ export default function CharacterEditPage() {
 
   const router = useRouter();
   const params = useParams();
-  const id = params.id as string;
+  const id = params.character_id as string;
 
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
