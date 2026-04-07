@@ -2,7 +2,7 @@ defmodule Tubbr.Repo.Migrations.RecreateCharactersWithUuid do
   use Ecto.Migration
 
   def change do
-    drop table(:characters)
+    drop_if_exists table(:characters)
 
     create table(:characters, primary_key: false) do
       add :id, :uuid, primary_key: true, default: fragment("gen_random_uuid()")
