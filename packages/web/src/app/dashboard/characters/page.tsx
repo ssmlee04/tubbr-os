@@ -92,7 +92,7 @@ export default function CharactersPage() {
           <div>
             <h1 style={{ fontSize: "28px", fontWeight: 600, color: "#fff" }}>Characters</h1>
             <p style={{ color: "rgba(255,255,255,0.5)", marginTop: "8px" }}>
-              Manage your characters here.
+              Manage your characters here. :)
             </p>
           </div>
           <button

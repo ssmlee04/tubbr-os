@@ -31,24 +31,41 @@ export default function CharacterVideosPage() {
         </button>
 
         <h1 style={{ fontSize: "28px", fontWeight: 600, color: "#fff", marginBottom: "16px" }}>
-          Generate Videos
+          Videos
         </h1>
 
-        <button
-          onClick={() => router.push(`/dashboard/characters/${characterId}/create-video`)}
-          style={{
-            background: "#8b5cf6",
-            color: "#fff",
-            border: "none",
-            padding: "10px 20px",
-            borderRadius: "8px",
-            cursor: "pointer",
-            fontSize: "14px",
-            fontWeight: 500,
-          }}
-        >
-          + Create Video
-        </button>
+        <div style={{ display: "flex", gap: "12px", marginBottom: "24px" }}>
+          <button
+            onClick={() => router.push(`/dashboard/characters/${characterId}/create-video`)}
+            style={{
+              background: "#8b5cf6",
+              color: "#fff",
+              border: "none",
+              padding: "10px 20px",
+              borderRadius: "8px",
+              cursor: "pointer",
+              fontSize: "14px",
+              fontWeight: 500,
+            }}
+          >
+            + Generate Video
+          </button>
+          <button
+            onClick={() => router.push(`/dashboard/characters/${characterId}/upload-video`)}
+            style={{
+              background: "#10b981",
+              color: "#fff",
+              border: "none",
+              padding: "10px 20px",
+              borderRadius: "8px",
+              cursor: "pointer",
+              fontSize: "14px",
+              fontWeight: 500,
+            }}
+          >
+            + Upload Video
+          </button>
+        </div>
         <p style={{ color: "rgba(255,255,255,0.5)" }}>
           Character ID: {characterId}
         </p>

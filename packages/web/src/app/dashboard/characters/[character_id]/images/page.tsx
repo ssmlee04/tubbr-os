@@ -31,24 +31,41 @@ export default function CharacterImagesPage() {
         </button>
 
         <h1 style={{ fontSize: "28px", fontWeight: 600, color: "#fff", marginBottom: "16px" }}>
-          Generate Images
+          Images
         </h1>
 
-        <button
-          onClick={() => router.push(`/dashboard/characters/${characterId}/create-image`)}
-          style={{
-            background: "#6366f1",
-            color: "#fff",
-            border: "none",
-            padding: "10px 20px",
-            borderRadius: "8px",
-            cursor: "pointer",
-            fontSize: "14px",
-            fontWeight: 500,
-          }}
-        >
-          + Create Image
-        </button>
+        <div style={{ display: "flex", gap: "12px", marginBottom: "24px" }}>
+          <button
+            onClick={() => router.push(`/dashboard/characters/${characterId}/create-image`)}
+            style={{
+              background: "#6366f1",
+              color: "#fff",
+              border: "none",
+              padding: "10px 20px",
+              borderRadius: "8px",
+              cursor: "pointer",
+              fontSize: "14px",
+              fontWeight: 500,
+            }}
+          >
+            + Generate Image
+          </button>
+          <button
+            onClick={() => router.push(`/dashboard/characters/${characterId}/upload-image`)}
+            style={{
+              background: "#10b981",
+              color: "#fff",
+              border: "none",
+              padding: "10px 20px",
+              borderRadius: "8px",
+              cursor: "pointer",
+              fontSize: "14px",
+              fontWeight: 500,
+            }}
+          >
+            + Upload Image
+          </button>
+        </div>
         <p style={{ color: "rgba(255,255,255,0.5)" }}>
           Character ID: {characterId}
         </p>
