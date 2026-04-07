@@ -1,4 +1,8 @@
+import { useAuth } from "@/hooks/useAuth";
+
 export default function CharactersPage() {
+  useAuth();
+
   return (
     <div style={{
       minHeight: "100vh",
