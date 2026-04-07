@@ -1,5 +1,5 @@
 defmodule TubbrWeb.GenerationParamsController do
-  use TubbrWeb, :controller
+  use Phoenix.Controller
 
   def index(conn, _params) do
     json(conn, %{
