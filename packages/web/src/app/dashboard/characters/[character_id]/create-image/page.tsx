@@ -1,10 +1,10 @@
 "use client";
 
 import { useRouter, useParams } from "next/navigation";
-import { DashboardSidebar } from "../../../DashboardSidebar";
+import { DashboardSidebar } from "../../../../DashboardSidebar";
 import { useAuth } from "@/hooks/useAuth";
 
-export default function CharacterImagesPage() {
+export default function CreateImagePage() {
   useAuth();
 
   const router = useRouter();
@@ -16,7 +16,7 @@ export default function CharacterImagesPage() {
       <DashboardSidebar />
       <main style={{ flex: 1, padding: "40px 20px" }}>
         <button
-          onClick={() => router.push("/dashboard/characters")}
+          onClick={() => router.push(`/dashboard/characters/${characterId}/images`)}
           style={{
             background: "transparent",
             border: "none",
@@ -27,28 +27,12 @@ export default function CharacterImagesPage() {
             padding: 0,
           }}
         >
-          ← Back to Characters
+          ← Back to Images
         </button>
 
         <h1 style={{ fontSize: "28px", fontWeight: 600, color: "#fff", marginBottom: "16px" }}>
-          Generate Images
+          Create Image
         </h1>
-
-        <button
-          onClick={() => router.push(`/dashboard/characters/${characterId}/create-image`)}
-          style={{
-            background: "#6366f1",
-            color: "#fff",
-            border: "none",
-            padding: "10px 20px",
-            borderRadius: "8px",
-            cursor: "pointer",
-            fontSize: "14px",
-            fontWeight: 500,
-          }}
-        >
-          + Create Image
-        </button>
         <p style={{ color: "rgba(255,255,255,0.5)" }}>
           Character ID: {characterId}
         </p>

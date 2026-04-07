@@ -33,6 +33,22 @@ export default function CharacterVideosPage() {
         <h1 style={{ fontSize: "28px", fontWeight: 600, color: "#fff", marginBottom: "16px" }}>
           Generate Videos
         </h1>
+
+        <button
+          onClick={() => router.push(`/dashboard/characters/${characterId}/create-video`)}
+          style={{
+            background: "#8b5cf6",
+            color: "#fff",
+            border: "none",
+            padding: "10px 20px",
+            borderRadius: "8px",
+            cursor: "pointer",
+            fontSize: "14px",
+            fontWeight: 500,
+          }}
+        >
+          + Create Video
+        </button>
         <p style={{ color: "rgba(255,255,255,0.5)" }}>
           Character ID: {characterId}
         </p>
