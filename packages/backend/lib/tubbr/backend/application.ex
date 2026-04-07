@@ -7,7 +7,6 @@ defmodule Tubbr.Application do
       Tubbr.Repo,
       {Phoenix.PubSub, name: Tubbr.PubSub},
       {DNSCluster, query: Application.get_env(:tubbr, :dns_cluster_query) || :ignore},
-      {Telemetry.Metrics.ConsoleReporter, []},
       TubbrWeb.Endpoint
     ]
 
