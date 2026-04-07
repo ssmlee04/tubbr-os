@@ -2,6 +2,10 @@
 
 An open source tool for generating scripts and videos using your keywords.
 
+Try the full experience at [https://trytubbr.com](https://trytubbr.com) — create AI-powered videos like this:
+
+[https://www.youtube.com/shorts/ukSL8eAgnN8](https://www.youtube.com/shorts/ukSL8eAgnN8)
+
 ## Quick Start
 
 ### Running the Project
