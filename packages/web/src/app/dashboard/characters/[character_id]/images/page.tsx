@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useRouter, useParams } from "next/navigation";
+import { Socket, Channel } from "phoenix";
 import { DashboardSidebar } from "../../../DashboardSidebar";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -41,8 +42,8 @@ export default function CharacterImagesPage() {
 
   const [generationParams, setGenerationParams] = useState<GenerationParams | null>(null);
   const [loading, setLoading] = useState(true);
-  const [socket, setSocket] = useState<any>(null);
-  const [channel, setChannel] = useState<any>(null);
+  const [socket, setSocket] = useState<Socket | null>(null);
+  const [channel, setChannel] = useState<Channel | null>(null);
   const [connected, setConnected] = useState(false);
   const [selectedProvider, setSelectedProvider] = useState<string>("");
   const [selectedModel, setSelectedModel] = useState<string>("");
@@ -50,8 +51,8 @@ export default function CharacterImagesPage() {
   const [generating, setGenerating] = useState(false);
   const [status, setStatus] = useState<string>("");
 
-  const socketRef = useRef<any>(null);
-  const channelRef = useRef<any>(null);
+  const socketRef = useRef<Socket | null>(null);
+  const channelRef = useRef<Channel | null>(null);
 
   // Fetch generation params on mount
   useEffect(() => {
@@ -87,54 +88,41 @@ export default function CharacterImagesPage() {
 
   // Connect to Phoenix channel
   useEffect(() => {
-    async function connectSocket() {
-      try {
-        // Dynamic import for socket.io-client
-        const { io } = await import("socket.io-client");
+    const newSocket = new Socket(SOCKET_URL, { params: {} });
 
-        const newSocket = io(SOCKET_URL, {
-          transports: ["websocket"],
-        });
+    newSocket.on("connect", () => {
+      console.log("Socket connected");
+      setSocket(newSocket);
 
-        socketRef.current = newSocket;
-        setSocket(newSocket);
+      const newChannel = newSocket.channel(`generation:${characterId}`, {});
+      channelRef.current = newChannel;
 
-        newSocket.on("connect", () => {
-          console.log("Socket connected");
+      newChannel.join()
+        .receive("ok", () => {
+          console.log("Joined generation channel");
           setConnected(true);
-
-          const newChannel = newSocket.channel(`generation:${characterId}`, {});
-          channelRef.current = newChannel;
-
-          newChannel.join()
-            .receive("ok", () => {
-              console.log("Joined generation channel");
-              setChannel(newChannel);
-            })
-            .receive("error", (resp: any) => {
-              console.error("Failed to join channel:", resp);
-            });
-
-          // Listen for progress events
-          newChannel.on("progress", (payload: any) => {
-            console.log("Progress:", payload);
-            setStatus(`${payload.status}: ${payload.message}`);
-            if (payload.status === "completed") {
-              setGenerating(false);
-            }
-          });
+          setChannel(newChannel);
+        })
+        .receive("error", (resp: any) => {
+          console.error("Failed to join channel:", resp);
         });
 
-        newSocket.on("disconnect", () => {
-          console.log("Socket disconnected");
-          setConnected(false);
-        });
-      } catch (error) {
-        console.error("Failed to connect socket:", error);
-      }
-    }
+      // Listen for progress events
+      newChannel.on("progress", (payload: any) => {
+        console.log("Progress:", payload);
+        setStatus(`${payload.status}: ${payload.message}`);
+        if (payload.status === "completed") {
+          setGenerating(false);
+        }
+      });
+    });
 
-    connectSocket();
+    newSocket.on("disconnect", () => {
+      console.log("Socket disconnected");
+      setConnected(false);
+    });
+
+    newSocket.connect();
 
     return () => {
       if (channelRef.current) {
