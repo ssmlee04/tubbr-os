@@ -2,7 +2,10 @@ import { Hono } from 'hono';
 import { serve } from '@hono/node-server';
 import { cors } from 'hono/cors';
 import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 import { getUserByUsername } from './db.js';
+
+const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret-change-in-production';
 
 const app = new Hono();
 
@@ -33,7 +36,13 @@ app.post('/login', async (c) => {
     return c.json({ error: 'Invalid credentials' }, 401);
   }
 
-  return c.json({ id: user.id, username: user.username });
+  const token = jwt.sign(
+    { id: user.id, username: user.username },
+    JWT_SECRET,
+    { expiresIn: '7d' }
+  );
+
+  return c.json({ token, id: user.id, username: user.username });
 });
 
 const port = parseInt(process.env.PORT || '3000');

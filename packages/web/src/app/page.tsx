@@ -28,6 +28,8 @@ export default function Home() {
         return;
       }
 
+      const data = await res.json();
+      localStorage.setItem("auth_token", data.token);
       router.push("/dashboard/characters");
     } catch (err) {
       setError("Unable to connect to server");
