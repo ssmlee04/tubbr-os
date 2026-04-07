@@ -88,48 +88,54 @@ export default function CharacterImagesPage() {
 
   // Connect to Phoenix channel
   useEffect(() => {
-    const newSocket = new Socket(SOCKET_URL, { params: {} });
+    const token = localStorage.getItem("auth_token");
+    let socket: Socket | null = null;
+    let channel: Channel | null = null;
 
-    newSocket.on("connect", () => {
-      console.log("Socket connected");
-      setSocket(newSocket);
-
-      const newChannel = newSocket.channel(`generation:${characterId}`, {});
-      channelRef.current = newChannel;
-
-      newChannel.join()
-        .receive("ok", () => {
-          console.log("Joined generation channel");
-          setConnected(true);
-          setChannel(newChannel);
-        })
-        .receive("error", (resp: any) => {
-          console.error("Failed to join channel:", resp);
+    const connect = () => {
+      console.log("Phoenix connecting...");
+      try {
+        socket = new Socket(SOCKET_URL, {
+          params: { token: token },
         });
 
-      // Listen for progress events
-      newChannel.on("progress", (payload: any) => {
-        console.log("Progress:", payload);
-        setStatus(`${payload.status}: ${payload.message}`);
-        if (payload.status === "completed") {
-          setGenerating(false);
-        }
-      });
-    });
+        channel = socket.channel(`generation:${characterId}`, {});
+        channelRef.current = channel;
 
-    newSocket.on("disconnect", () => {
-      console.log("Socket disconnected");
-      setConnected(false);
-    });
+        channel.join()
+          .receive("ok", () => {
+            console.log("Joined channel successfully");
+            setConnected(true);
+            setChannel(channel);
+          })
+          .receive("error", (resp: any) => {
+            console.log("Unable to join channel", resp);
+            setConnected(false);
+          });
 
-    newSocket.connect();
+        // Handle progress events
+        channel.on("progress", (payload: any) => {
+          console.log("Progress:", payload);
+          setStatus(`${payload.status}: ${payload.message}`);
+          if (payload.status === "completed") {
+            setGenerating(false);
+          }
+        });
+
+        socket.connect();
+      } catch (error) {
+        console.error("Connection error:", error);
+      }
+    };
+
+    connect();
 
     return () => {
-      if (channelRef.current) {
-        channelRef.current.leave();
+      if (channel) {
+        channel.leave();
       }
-      if (socketRef.current) {
-        socketRef.current.disconnect();
+      if (socket) {
+        socket.disconnect();
       }
     };
   }, [characterId]);
