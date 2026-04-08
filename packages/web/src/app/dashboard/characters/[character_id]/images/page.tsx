@@ -6,6 +6,15 @@ import { Socket, Channel } from "phoenix";
 import { DashboardSidebar } from "../../../DashboardSidebar";
 import { useAuth } from "@/hooks/useAuth";
 
+function fileToBase64(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
 interface Provider {
   name: string;
   models: Model[];
@@ -22,8 +31,10 @@ interface Param {
   type: string;
   label: string;
   required?: boolean;
+  optional?: boolean;
   default?: any;
-  options?: string[];
+  options?: { key: string; value: string; preview_url?: string }[];
+  multi?: boolean;
 }
 
 interface GenerationParams {
@@ -307,7 +318,48 @@ export default function CharacterImagesPage() {
                   <label style={{ display: "block", color: "#fff", fontSize: "14px", marginBottom: "8px" }}>
                     {param.label} {param.required && "*"}
                   </label>
-                  {param.type === "select" ? (
+                  {param.type === "file" ? (
+                    <div>
+                      <input
+                        type="file"
+                        multiple={param.multi}
+                        accept="image/*"
+                        onChange={async (e) => {
+                          const files = e.target.files;
+                          if (!files) return;
+
+                          if (param.multi) {
+                            // Multiple files: store as array of base64
+                            const base64Files = await Promise.all(
+                              Array.from(files).map(file => fileToBase64(file))
+                            );
+                            setFormValues({ ...formValues, [param.name]: base64Files });
+                          } else {
+                            // Single file: store as single base64
+                            const base64 = await fileToBase64(files[0]);
+                            setFormValues({ ...formValues, [param.name]: base64 });
+                          }
+                        }}
+                        disabled={generating}
+                        style={{
+                          width: "100%",
+                          padding: "10px",
+                          background: "#0a0a0a",
+                          border: "1px solid #333",
+                          borderRadius: "8px",
+                          color: "#fff",
+                          fontSize: "14px",
+                        }}
+                      />
+                      {formValues[param.name] && (
+                        <div style={{ marginTop: "8px", color: "#888", fontSize: "12px" }}>
+                          {Array.isArray(formValues[param.name])
+                            ? `${formValues[param.name].length} file(s) selected`
+                            : "1 file selected"}
+                        </div>
+                      )}
+                    </div>
+                  ) : param.type === "select" ? (
                     <select
                       value={formValues[param.name] || ""}
                       onChange={(e) => setFormValues({ ...formValues, [param.name]: e.target.value })}
@@ -322,9 +374,11 @@ export default function CharacterImagesPage() {
                         fontSize: "14px",
                       }}
                     >
-                      {param.options?.map((opt) => (
-                        <option key={opt} value={opt}>{opt}</option>
-                      ))}
+                      {param.options?.map((opt: any) => {
+                        const optKey = opt.key ?? opt;
+                        const optValue = opt.value ?? opt;
+                        return <option key={optKey} value={optValue}>{optKey}</option>;
+                      })}
                     </select>
                   ) : param.type === "number" ? (
                     <input
