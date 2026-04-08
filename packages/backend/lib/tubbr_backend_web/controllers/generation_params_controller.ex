@@ -196,7 +196,7 @@ defmodule TubbrWeb.GenerationParamsController do
                     %{
                       name: "prompt",
                       type: "string",
-                      optional: false,
+                      required: true,
                       label: "Prompt",
                       description: "Text description of the image"
                     },
@@ -204,14 +204,14 @@ defmodule TubbrWeb.GenerationParamsController do
                       name: "image_input",
                       type: "file",
                       multi: true,
-                      optional: true,
+                      required: false,
                       label: "Image Input (If this is empty, it will look up character names in your prompt. It can support up to 3 characters)",
                       description: "Multiple reference images (up to 2 images)"
                     },
                     %{
                       name: "size",
                       type: "select",
-                      optional: true,
+                      required: false,
                       default: "2K",
                       options: [%{key: "2K", value: "2K"}, %{key: "3K", value: "3K"}],
                       label: "Resolution",
@@ -220,7 +220,7 @@ defmodule TubbrWeb.GenerationParamsController do
                     %{
                       name: "aspect_ratio",
                       type: "select",
-                      optional: true,
+                      required: false,
                       default: "1:1",
                       options: [
                         %{key: "1:1", value: "1:1"},
@@ -248,21 +248,21 @@ defmodule TubbrWeb.GenerationParamsController do
                     %{
                       name: "prompt",
                       type: "string",
-                      optional: false,
+                      required: true,
                       label: "Prompt",
                       description: "Text description of the video"
                     },
                     %{
                       name: "image",
                       type: "file",
-                      optional: true,
+                      required: false,
                       label: "Input Image",
                       description: "Input image to animate (base64)"
                     },
                     %{
                       name: "aspect_ratio",
                       type: "select",
-                      optional: false,
+                      required: true,
                       default: "16:9",
                       options: [
                         %{key: "1:1", value: "1:1"},
@@ -275,7 +275,7 @@ defmodule TubbrWeb.GenerationParamsController do
                     %{
                       name: "duration",
                       type: "select",
-                      optional: true,
+                      required: false,
                       default: 3,
                       options: [
                         %{key: 2, value: 2},
@@ -307,14 +307,14 @@ defmodule TubbrWeb.GenerationParamsController do
                     %{
                       name: "prompt",
                       type: "string",
-                      optional: false,
+                      required: true,
                       label: "Prompt",
                       description: "Text description of the audio"
                     },
                     %{
                       name: "voice_id",
                       type: "select",
-                      optional: true,
+                      required: false,
                       has_voice_preview_url: true,
                       default: Enum.at(@eleven_labs_voices, 0).value,
                       options: @eleven_labs_voices,

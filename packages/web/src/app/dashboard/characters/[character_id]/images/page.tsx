@@ -60,6 +60,7 @@ export default function CharacterImagesPage() {
   const [selectedModel, setSelectedModel] = useState<string>("");
   const [formValues, setFormValues] = useState<Record<string, any>>({});
   const [generating, setGenerating] = useState(false);
+  const [showGenerateForm, setShowGenerateForm] = useState(false);
   const [status, setStatus] = useState<string>("");
 
   const socketRef = useRef<Socket | null>(null);
@@ -178,11 +179,25 @@ export default function CharacterImagesPage() {
   const handleGenerate = async () => {
     if (!channel || generating) return;
 
+    // Validate required params (check both required: true and optional: false)
+    const missingParams = currentModel?.params
+      .filter(param => {
+        const isRequired = param.required || param.optional === false;
+        const hasValue = formValues[param.name] !== undefined && formValues[param.name] !== "";
+        return isRequired && !hasValue;
+      })
+      .map(param => param.label);
+
+    if (missingParams && missingParams.length > 0) {
+      setStatus(`Please fill in required field(s): ${missingParams.join(", ")}`);
+      return;
+    }
+
     setGenerating(true);
     setStatus("Starting generation...");
 
     try {
-      await channel.push("generate_image", {
+      await channel.push("generate-character-image", {
         provider: selectedProvider,
         model: selectedModel,
         params: formValues,
@@ -198,6 +213,13 @@ export default function CharacterImagesPage() {
 
   const currentProvider = generationParams?.image?.providers.find(p => p.name === selectedProvider);
   const currentModel = currentProvider?.models.find(m => m.id === selectedModel);
+  const hasMissingRequiredParams = currentModel?.params
+    .filter(param => {
+      const isRequired = param.required || param.optional === false;
+      const hasValue = formValues[param.name] !== undefined && formValues[param.name] !== "";
+      return isRequired && !hasValue;
+    })
+    .length ?? 0 > 0;
 
   return (
     <div style={{ display: "flex", minHeight: "100vh", background: "#000" }}>
@@ -224,7 +246,7 @@ export default function CharacterImagesPage() {
 
         <div style={{ display: "flex", gap: "12px", marginBottom: "24px" }}>
           <button
-            onClick={() => router.push(`/dashboard/characters/${characterId}/create-image`)}
+            onClick={() => setShowGenerateForm(!showGenerateForm)}
             style={{
               background: "#6366f1",
               color: "#fff",
@@ -236,10 +258,42 @@ export default function CharacterImagesPage() {
               fontWeight: 500,
             }}
           >
-            + Generate Image
+            {showGenerateForm ? "Close" : "+ Generate Image"}
           </button>
-          <button
-            onClick={() => router.push(`/dashboard/characters/${characterId}/upload-image`)}
+          <input
+            type="file"
+            accept="image/*"
+            multiple
+            id="upload-image-input"
+            style={{ display: "none" }}
+            onChange={async (e) => {
+              const files = e.target.files;
+              if (!files || !channel) return;
+
+              const base64Files = await Promise.all(
+                Array.from(files).map(file => fileToBase64(file))
+              );
+
+              setStatus("Uploading...");
+
+              try {
+                await channel.push("upload_character_image", {
+                  character_id: characterId,
+                  images: base64Files,
+                  request_id: crypto.randomUUID(),
+                });
+                setStatus("Upload started!");
+              } catch (error) {
+                console.error("Failed to upload:", error);
+                setStatus("Failed to upload");
+              }
+
+              // Reset input
+              e.target.value = "";
+            }}
+          />
+          <label
+            htmlFor="upload-image-input"
             style={{
               background: "#10b981",
               color: "#fff",
@@ -252,12 +306,12 @@ export default function CharacterImagesPage() {
             }}
           >
             + Upload Image
-          </button>
+          </label>
         </div>
 
         {loading ? (
           <p style={{ color: "rgba(255,255,255,0.5)" }}>Loading...</p>
-        ) : (
+        ) : showGenerateForm ? (
           <div style={{ maxWidth: "600px" }}>
             <div style={{ marginBottom: "24px", padding: "16px", background: "#1a1a1a", borderRadius: "8px" }}>
               <h3 style={{ color: "#fff", fontSize: "16px", marginBottom: "16px" }}>Generate New Image</h3>
@@ -419,7 +473,7 @@ export default function CharacterImagesPage() {
 
               <button
                 onClick={handleGenerate}
-                disabled={generating || !selectedProvider || !selectedModel}
+                disabled={generating || !selectedProvider || !selectedModel || hasMissingRequiredParams}
                 style={{
                   width: "100%",
                   background: generating ? "#333" : "#6366f1",
@@ -446,6 +500,8 @@ export default function CharacterImagesPage() {
               </div>
             </div>
           </div>
+        ) : (
+          <p style={{ color: "rgba(255,255,255,0.5)" }}>No images yet. Click "Generate Image" to create one.</p>
         )}
       </main>
     </div>
